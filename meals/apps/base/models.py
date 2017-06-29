@@ -8,7 +8,7 @@ class Restoran(models.Model):
 
 class Menu(models.Model):
     name = models.TextField(max_length=50)
-    restoran = models.ForeignKey(Restoran, on_delete=models.CASCADE)
+    restoran = models.ForeignKey(Restoran, related_name='menus', on_delete=models.CASCADE)
 
 class Meal(models.Model):
     name = models.TextField(max_length=50)
