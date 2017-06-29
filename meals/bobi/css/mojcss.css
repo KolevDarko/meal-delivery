@@ -1,0 +1,155 @@
+ul {
+    list-style: none;
+    cursor: pointer;
+}
+a {
+    color: black;
+    line-height: 25px;
+    text-decoration: none;
+}
+a:hover {
+    color: #aaa;
+    text-decoration: none;
+}
+span.sb-caret {
+    width: 0px;
+    height: 0px;
+    display: inline-block;
+    margin: 0px 5px;
+    border: 5px solid transparent;
+}
+span.sb-caret {
+    /* Caret Down */
+    border-top: 5px solid;
+    border-bottom: 0px solid transparent;
+}
+.sb-submenu-active > span.sb-caret {
+    /* Caret Up */
+    border-top: 0px solid transparent;
+    border-bottom: 5px solid;
+}
+ul li > ul {
+    display: none;
+    /* 	border:1px solid black; */
+}
+
+
+/* pocetna slika css; */
+.slider1.jpg
+{
+	height: 25px;
+	width: 200px;
+	
+    border: 5px solid white;
+
+}
+
+/* nasa preporaka slider; */
+.thumbnail {
+  display: block;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.42857143;
+  -webkit-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+  border-radius: 0;
+  border: none;
+  background-color: none;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 15%;
+  opacity: .5;
+  font-size: 20px;
+  color: #fff;
+  text-align: center;
+  text-shadow: none;
+}
+.carousel-control.left {
+	background-image: none;
+}
+.carousel-control.right {
+  left: auto;
+  right: 0;
+  background-image: none;
+}
+
+.carousel-control {
+  padding-top:10.25%;
+  width:5%;
+}
+
+.main-image{
+    width: 100%;
+    height: 300px;
+}
+
+
+.no-padding{
+    padding: 0;
+}
+
+
+
+/* OVERLAY CSS */
+.container-a {
+    position: relative;
+    /*width: 50%;*/
+}
+
+.image-a {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.overlay-a {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: black;
+}
+
+.container-a:hover .overlay-a {
+    opacity: 0.8;
+}
+
+.text-a {
+    text-align: left;
+    color: white;
+    font-size: 13px;
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    right: -40%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+
+/*na sredina se da se stave */
+.row-sredina {
+    position: relative;
+    text-align:center;
+}
+
+/*levo meni boja dimenzii i razni gluposti */
+.navbar-fixed-side {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.container-fluid {
+    padding: 0%;
+}
