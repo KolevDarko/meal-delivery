@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>{{ r }}</h1>
+    {% for menu in r.menus.all %}
+        <h2>{{ menu.name }}</h2>
+        {% for meal in menu.meals.all %}
+            <p>{{ meal.name }} {{ meal.description }}
+                {% if meal.image.url != null %}
+                    <img src="{{ meal.image.url }}">
+                {% endif %}
+            </p>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+
