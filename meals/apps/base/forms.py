@@ -7,12 +7,22 @@ class RestoranForm(ModelForm):
         model = Restoran
         exclude= []
 
-class MealForm(ModelForm):
+class NewMealForm(ModelForm):
     class Meta:
         model = Meal
         exclude = []
 
-class MenuForm(ModelForm):
+class NewMenuForm(ModelForm):
     class Meta:
         model = Menu
         exclude = []
+
+class EditMealForm(ModelForm):
+    class Meta:
+        model = Meal
+        exclude = ['menu']
+
+class EditMenuForm(ModelForm):
+    class Meta:
+        model = Menu
+        exclude = ['restoran']

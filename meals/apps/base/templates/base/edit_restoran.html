@@ -1,0 +1,30 @@
+<style>
+    textarea{
+        height: 25px;
+    }
+
+    img{
+        height: 50px;
+        width: 50px;
+    }
+</style>
+
+{% extends 'base.html' %}
+
+{% block page_title %}Edit {{ r.name }}{% endblock page_title %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add {{ type }}</button>
+    </form>
+    <div id="menus">
+    {% for m in r.menus.all %}
+        <h3><a href="{% url 'edit_menu' pk=m.id %}">{{ m.name }}</a> || <a href="{% url 'delete_menu' pk=m.id %}">Delete</a> </h3>
+        {% for meal in m.meals.all %}
+            <a href="{% url 'edit_meal' pk=meal.id %}"><img src="{{ meal.image.url }}"> {{ meal.name }}</a> || <a href="{% url 'delete_meal' pk=meal.id %}">Delete</a><br>
+        {% endfor %}
+    {% endfor %}
+    </div>
+{% endblock content %}

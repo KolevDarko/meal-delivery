@@ -1,10 +1,11 @@
 """Base models"""
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Restoran(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
+    owner = models.ForeignKey(User, null=True)
 
     def __str__(self):
         return "{0}: {1} id:{2}".format(self.name, self.description, self.id)

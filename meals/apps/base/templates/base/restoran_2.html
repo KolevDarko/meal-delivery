@@ -1,17 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-    <h1>{{ r }}</h1>
-    {% for menu in r.menus.all %}
-        <h2>{{ menu.name }}</h2>
-        {% for meal in menu.meals.all %}
-            <p>{{ meal.name }} {{ meal.description }}
-                {% if meal.image.url != null %}
-                    <img src="{{ meal.image.url }}">
-                {% endif %}
-            </p>
-        {% endfor %}
-    {% endfor %}
+{% block navigation_list %}
+    <li><a href="index.php">Почетна</a> </li>
+    <li class="showFirst"><a href="">Ресторанти<span
+                class="sb-caret"></span></a>
+        <ul>
+            {% for rest in lista_restorani %}
+                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
+            {% endfor %}
+        </ul>
+    </li>
 {% endblock %}
 
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="container-fluid">
+
+                    <center><h1>{{ r.name }}</h1></center>
+                    <img src="{% static 'img/slider1.jpg' %}" class="img-responsive main-image" height="100">
+                    <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
+                </div>
+            </div>
+
+            {% for menu in r.menus.all %}
+
+            <div class="container-fluid">
+                <div class="row-sredina">
+                    <div class="col-lg-20">
+                        <h2>МЕНИ</h2>
+                        <div class="container">
+                            <div class="col-md-11">
+                                <p align="left"><strong>{{ menu.name }}</strong></p>
+                                <div class="well-none">
+                                    <div id="myCarousel" class="carousel slide">
+                                        <!-- Carousel items -->
+                                        <div class="carousel-inner">
+                                            <div class="item active">
+                                                <div class="row">
+                                                    {% spaceless %}
+                                                    {% for meal in menu.meals.all %}
+                                                    <div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
+                                                        <div class="container-a">
+                                                            <a href="#x"><img src="
+                                                                {% if meal.image.file != none %} {{ meal.image.url }} {% else %} http://placehold.it/500x500 {% endif %}
+                                                                " alt="Image" class="img-responsive" width="220" height="220"></a>
+                                                            <div class="overlay-a">
+                                                                <div class="text-a">
+                                                                    {{ meal.description }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p>
+                                                            <img style="float: left; margin: 5px;"  />
+                                                            {{ meal.name }}
+                                                        </p>
+                                                    </div>
+                                                        {% endfor %}
+                                                        {% endspaceless %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/myCarousel-->
+                            </div>
+                            <!--/well-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

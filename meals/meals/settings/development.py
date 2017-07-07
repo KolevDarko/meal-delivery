@@ -64,3 +64,5 @@ try:
     from local_settings import * # noqa
 except ImportError:
     pass
+
+LOGIN_REDIRECT_URL = 'home'
