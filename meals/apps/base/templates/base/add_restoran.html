@@ -1,0 +1,17 @@
+<style>
+
+</style>
+
+{% extends 'base.html' %}
+
+{% block page_title %}Add a {{ type }} {% endblock page_title %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="customInput">Name: {{ form.name }}</div>
+        <div class="customInput">Description: {{ form.description }}</div>
+        <div class="customInput">Owner: {{ form.owner }}</div>
+        <div><button type="submit">Create Restaurant</button></div>
+    </form>
+{% endblock content %}
