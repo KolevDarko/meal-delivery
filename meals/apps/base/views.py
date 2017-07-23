@@ -17,30 +17,36 @@ def restoran(request):
 
 def new_restoran(request):
     if request.method == 'POST':
-        form = RestoranForm(data=request.POST, files=request.FILES)
+        form = NewRestoranForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('home')
+            data = form.cleaned_data
+            restoran = Restoran(name=data['name'], description=data['description'], owner=data['owner'])
+            restoran.save()
+            return redirect('restoran2', pk=restoran.pk)
     else:
-        form = RestoranForm()
+        form = NewRestoranForm()
     return render(request, 'base/add_item.html', {'type': 'Restoran', 'form': form})
 
 def new_meal(request):
     if request.method == 'POST':
         form = NewMealForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('home')
+            data = form.cleaned_data
+            meal = Meal(name=data['name'], description=data['description'], menu=data['menu'], image=data['image'])
+            meal.save()
+            return redirect('restoran2', pk=meal.menu.restoran.pk)
     else:
         form = NewMealForm()
-    return render(request, 'base/add_item.html', {'type': 'Meal', 'form': form})
+    return render(request, 'base/add_meal.html', {'type': 'Meal', 'form': form})
 
 def new_menu(request):
     if request.method == 'POST':
         form = NewMenuForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('home')
+            data = form.cleaned_data
+            menu = Menu(name=data['name'], restoran=data['restoran'])
+            menu.save()
+            return redirect('restoran2', pk=menu.restoran.pk)
     else:
         form = NewMenuForm()
     return render(request, 'base/add_item.html', {'type': 'Menu', 'form': form})
@@ -49,12 +55,12 @@ def edit_restoran(request, pk):
     restoran_instance = get_object_or_404(Restoran, pk=pk)
     if restoran_instance.owner == None or restoran_instance.owner == request.user or request.user.is_superuser:
         if request.method == 'POST':
-            form = RestoranForm(data=request.POST, files=request.FILES, instance=restoran_instance)
+            form = EditRestoranForm(data=request.POST, files=request.FILES, instance=restoran_instance)
             if form.is_valid():
                 form.save()
                 return redirect(reverse('restoran2', kwargs={'pk': pk}))
         else:
-            form = RestoranForm(instance=restoran_instance)
+            form = NewRestoranForm()
         return render(request, 'base/edit_restoran.html', {'r': restoran_instance, 'form': form})
     else:
         return redirect('home')
@@ -101,7 +107,7 @@ def edit_menu(request, pk):
             return redirect(reverse('edit_restoran', kwargs={'pk': menu_instance.restoran.id}))
     else:
         form = EditMenuForm(instance=menu_instance)
-    return render(request, 'base/edit_meal.html', {'r': menu_instance, 'form': form})
+    return render(request, 'base/edit_menu.html', {'r': menu_instance, 'form': form})
 
 def signup(request):
     if request.method == 'POST':

@@ -16,8 +16,9 @@
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add {{ type }}</button>
+        <div class="customInput">Name: {{ form.name }}</div>
+        <div class="customInput">Description: {{ form.description }}</div>
+        <button type="submit">Save</button>
     </form>
     <div id="menus">
     {% for m in r.menus.all %}
