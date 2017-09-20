@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
+{% block navigation_list %}
+{% endblock %}
+
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="customInput">Name: {{ form.name }}</div>
         <div class="customInput">Description: {{ form.description }}</div>
+        <div class="customInput">Price: {{ form.price }}</div>
         <div class="customInput">Image: {{ form.image }}</div>
         <div><button type="submit">Save changes</button></div>
     </form>

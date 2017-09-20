@@ -11,21 +11,49 @@
 
 {% extends 'base.html' %}
 
+{% block navigation_list %}
+{% endblock %}
+
 {% block page_title %}Edit {{ r.name }}{% endblock page_title %}
 
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="customInput">Name: {{ form.name }}</div>
+        <!--<div class="customInput">Name: {{ form.name }}</div> -->
+        <h1>{{ r.name }}</h1>
         <div class="customInput">Description: {{ form.description }}</div>
-        <button type="submit">Save</button>
-    </form>
+        <div class="customInput">Status: {{ form.status }}</div>
+        <div class="customInput">Image: {{ form.image }}</div>
+
+
     <div id="menus">
     {% for m in r.menus.all %}
         <h3><a href="{% url 'edit_menu' pk=m.id %}">{{ m.name }}</a> || <a href="{% url 'delete_menu' pk=m.id %}">Delete</a> </h3>
         {% for meal in m.meals.all %}
-            <a href="{% url 'edit_meal' pk=meal.id %}"><img src="{{ meal.image.url }}"> {{ meal.name }}</a> || <a href="{% url 'delete_meal' pk=meal.id %}">Delete</a><br>
+            <a href="{% url 'edit_meal' pk=meal.id %}"><img src="{{ meal.image.url }}"> {{ meal.name }}</a> ||
+            <a href="{% url 'delete_meal' pk=meal.id %}">Delete</a> ||
+            <label>Is Active:</label><input type="checkbox" name="{{ meal.id }}_is_active" value="{{ meal.id }}"
+            {% if meal.is_active %}
+                checked="checked"
+            {% endif %}>
+            <br>
+
         {% endfor %}
     {% endfor %}
     </div>
+
+    <hr>
+    <button type="submit">Save</button>
+    </form>
+
+    <script>
+    $('input[type=radio]').on('change', function () {
+        $.post('', $(this).closest("form").serialize())
+    })
+
+    $('.order_form').submit(function (e) {
+        $.post('', $(this).serialize());
+        e.preventDefault();
+    })
+    </script>
 {% endblock content %}

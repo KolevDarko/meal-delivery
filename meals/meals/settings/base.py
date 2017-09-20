@@ -5,6 +5,7 @@ if you need to override something do it in local.pt
 
 from sys import path
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -75,7 +76,7 @@ INTERNAL_IPS = ('127.0.0.1')
 # LOCALE SETTINGS
 # Local time zone for this installation.
 # https://docs.djangoproject.com/en/1.10/ref/settings/#time-zone
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'Europe/Skopje'
 
 # https://docs.djangoproject.com/en/1.10/ref/settings/#language-code
 LANGUAGE_CODE = 'en-us'
@@ -134,7 +135,10 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages'
+                'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },

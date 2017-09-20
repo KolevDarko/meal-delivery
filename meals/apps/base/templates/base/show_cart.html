@@ -1,0 +1,13 @@
+<h3>{{ restoran_name }}</h3>
+{% for meal in meals %}
+    {{ meal.0.name }}  x{{ meal.1 }}<br>
+{% endfor %}
+<hr>
+Total: {{ sum }}
+<br>
+<hr>
+{#<form action="" method="post" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        <input type="submit" value="Направи нарачка">#}
+{#</form>#}
+<a href="{% url 'make_order' %}">Направи нарачка</a>

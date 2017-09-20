@@ -1,8 +1,9 @@
 """urlconf for the base application"""
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 from .views import *
 from django.contrib.auth.views import login, logout
+
 
 
 urlpatterns = [
@@ -20,7 +21,17 @@ urlpatterns = [
     url(r'^menu/edit/(?P<pk>\d+)/$', edit_menu, name='edit_menu'),
     url(r'^menu/delete/(?P<pk>\d+)/$', Delete_menu.as_view(), name='delete_menu'),
 
+    url(r'^pick_city$', pick_city, name='pick_city'),
+    url(r'^cart$', show_cart , name='show_cart'),
+    url(r'^make_order$', make_order, name='make_order'),
+    url(r'^my_orders$', orders_for_user, name='my_orders'),
+    url(r'^restoran/(?P<pk>\d+)/orders$', orders_for_restoran, name='orders_for_restoran'),
+    url(r'^restoran/(?P<pk>\d+)/approved_orders$', approved_orders_for_restoran, name='approved_orders_for_restoran'),
+    url(r'^order/(?P<pk>\d+)', order_details, name='order_details'),
+
     url(r'^signup/$', signup, name='signup'),
     url(r'^login/$', login, {'template_name': 'base/login.html'}, name='login'),
     url(r'^logout/$', logout, {'next_page': 'home'}, name='logout'),
+
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]

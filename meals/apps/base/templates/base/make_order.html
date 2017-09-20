@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Нарачај</title>
+</head>
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Адреса:</label>{{ form.address }}<br>
+        <label>Телефон:</label>{{ form.phone }}<br>
+        <label>Специјално барање:</label>{{ form.special_request }}<br>
+        <label>Достава:</label>{{ form.delivery }}<br>
+        <input type="submit" value="Нарачај">
+</form>
+</body>
+</html>

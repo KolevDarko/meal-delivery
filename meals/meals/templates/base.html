@@ -1,5 +1,6 @@
 {% load static %}
 {% load compress %}
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -43,54 +44,42 @@
 
                 <!-- normal collapsible navbar markup -->
 
-                {% block navigation_list %}
+            {% block navigation_list %}
                 <ul>
                     <a href="/"><h2>ОнЛајн <br> Храна</h2></a>
 
                     <!--moe meni-->
                     <li><a href="index.php">Почетна</a> </li>
-                    <li class="showFirst"><a href="restoranti.php">Ресторанти<span
+                    <li class="showFirst">Ресторанти<span
                                 class="sb-caret"></span></a>
                         <ul>
-                            <li><a href="pace.php">Паце</a>
-                            </li>
-                            <li><a href="{% static restoran %}">Огниште</a>
-                            </li>
-                            <li><a href="aledar.php">Аледар</a>
-                            </li>
+                            {% for rest in lista_restorani %}
+                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
+                            {% endfor %}
                         </ul>
                     </li>
-                    <li class="showFirst"><a href="picerii.php">Пицерии<span
-                                class="sb-caret"></span></a>
+                    <li class="showFirst">Пицерии<span
+                                class="sb-caret"></span>
                         <ul>
-                            <li><a href="#">Филитеа</a>
-                            </li>
-                            <li><a href="#">Капри</a>
-                            </li>
-                            <li><a href="#">Аквариум</a>
-                            </li>
+                            {% for rest in lista_picerii %}
+                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
+                            {% endfor %}
                         </ul>
                     </li>
-                    <li class="showFirst"><a href="sendvicari.php">Сендвичари<span
-                                class="sb-caret"></span></a>
+                    <li class="showFirst">Сендвичари<span
+                                class="sb-caret"></span>
                         <ul>
-                            <li><a href="#">Кај Кокси</a>
-                            </li>
-                            <li><a href="#">Бургеркинг</a>
-                            </li>
-                            <li><a href="#">Два другара</a>
-                            </li>
+                            {% for rest in lista_sendvicari %}
+                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
+                            {% endfor %}
                         </ul>
                     </li>
-                    <li class="showFirst"><a href="burekcilnici.php">Бурекчилници<span
-                                class="sb-caret"></span></a>
+                    <li class="showFirst">Бурекчилници<span
+                                class="sb-caret"></span>
                         <ul>
-                            <li><a href="#">Боби</a>
-                            </li>
-                            <li><a href="#">Балкан Лукс</a>
-                            </li>
-                            <li><a href="#">Беличеви</a>
-                            </li>
+                            {% for rest in lista_burekcilnici %}
+                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
+                            {% endfor %}
                         </ul>
                     </li>
                     <li><a href="kontakt.php">Контакт</a></li>
@@ -103,11 +92,47 @@
     <div class="container">
     {% block content %}
 
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
+
+            .star-ratings-sprite {
+                background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+                font-size: 0;
+                height: 21px;
+                line-height: 0;
+                overflow: hidden;
+                text-indent: -999em;
+                width: 110px;
+                margin: 0 auto;
+                float: left;
+            }
+            .star-ratings-sprite-rating {
+                background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+                background-position: 0 100%;
+                float: left;
+                height: 21px;
+                display: block;
+            }
+            em {
+                font-style: italic;
+            }
+
+            .restoran-description{
+                float: left;
+            }
+
+            .restoran-image{
+                width: 200px;
+
+            }
+
+        </style>
+
 		<div class="col-lg-10">
 			<div class="row">
 				<div class="container-fluid">
 
-					<center><h1>ОнЛајн Храна</h1></center>
+					<center><h1>ОнЛајн Храна во {{ city }}  {{ user}}</h1></center>
 					<img src="{% static 'img/slider1.jpg' %}" class="img-responsive main-image" height="100">
 
 					<p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
@@ -117,7 +142,7 @@
 
 			<div class="row-sredina">
 
-		     <h3>Наша препорака</h3>
+		     <h3>Наша препорака </h3>
 
 				<div class="container">
 					<div class="col-md-11">
@@ -222,136 +247,27 @@
 										<div class="carousel-inner">
 											<div class="item active">
 												<div class="row">
+                                                    {% for restoran in restorans_all %}
 
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
-
-													<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-														<div class="container-a">
-															<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-															<div class="overlay-a">
-																<div class="text-a">Hello World</div>
-															</div>
-														</div>
-														<p>
-															<img style="float: left; margin: 5px;"  />
-															Text goes here...
-														</p>
-													</div>
+                                                            <div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
+                                                                <a href="{% url 'restoran2' pk=restoran.id %}">
+                                                                    <div class="container-a">
+                                                                        <img src="{{ restoran.image.url }}" alt="Image" class="img-responsive restoran-image" width="220" height="220">
+                                                                        <div class="overlay-a">
+                                                                            <div class="restoran-description">{{ restoran.description }} </div><br>
+                                                                            <div class="star-ratings-sprite"><span style="width:{{ restoran.average_rating }}%" class="star-ratings-sprite-rating"></span></div>
+                                                                            <span style="float:left;">({{ restoran.ratings.all.count }})</span>
+                                                                            <div style="float:left;">Статус: {{ restoran.get_status_display }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p>
+                                                                        <img style="float: left; margin: 5px;"  />
+                                                                        {{ restoran.name }}
+                                                                    </p>
+                                                                </a>
+                                                                <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">коментари</button>
+                                                            </div>
+                                                    {% endfor %}
 
 												</div>
 											</div>
@@ -366,6 +282,51 @@
 				</div>
 			</div>
 		</div>
+
+        <div id="comments">
+        </div>
+
+        <style>
+            #comments{
+                position: fixed;
+                width: 40%;
+                height: 60%;
+                background: rgba(130,130,130,.8);
+                padding: 20px 22px;
+                border: 1px solid;
+                left: 30%;
+                top: 20%;
+                overflow-y: auto;
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+
+            function showCommentsForRestoran(comments_content) {
+                document.getElementById("comments").innerHTML = comments_content;
+                $("#comments").show();
+            }
+
+            function setPictureHeight() {
+                var cw = $('.restoran-image').width();
+                $('.restoran-image').css({'height':cw+'px'});
+            }
+            window.onresize = setPictureHeight;
+            setPictureHeight();
+
+            $("#comments").hide();
+
+            $(document).mouseup(function(e) {
+                var container = $("#comments");
+                // if the target of the click isn't the container nor a descendant of the container
+                if (!container.is(e.target) && container.has(e.target).length === 0)
+                {
+                    container.hide();
+                }
+            });
+                </script>
+
 	{% endblock %}</div>
         </div>
 </div>

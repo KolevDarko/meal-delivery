@@ -11,6 +11,7 @@
         {% csrf_token %}
         <div class="customInput">Name: {{ form.name }}</div>
         <div class="customInput">Description: {{ form.description }}</div>
+        <div class="customInput">Price: {{ form.price }}</div>
         <div class="customInput">Menu: {{ form.menu }}</div>
         <div class="customInput">Image: {{ form.image }}</div>
         <div><button type="submit">Add meal</button></div>
