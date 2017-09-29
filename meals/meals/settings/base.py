@@ -28,7 +28,7 @@ path.append(os.path.join(PROJECT_ROOT, "libs"))
 SITE_ID = 1
 
 # https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['94.156.35.232']
 
 # https://docs.djangoproject.com/en/1.10/ref/settings/#installed-apps
 INSTALLED_APPS = [

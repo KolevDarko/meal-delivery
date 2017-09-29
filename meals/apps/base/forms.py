@@ -34,7 +34,8 @@ class NewMealForm(forms.Form):
     description = forms.CharField(
         widget=forms.Textarea(attrs={'cols': 40, 'rows': 5}),
     )
-    price = forms.IntegerField()
+    price_small = forms.IntegerField()
+    price_large = forms.IntegerField()
     menu = forms.ModelChoiceField(queryset=Menu.objects.all())
     image = forms.ImageField()
 
@@ -45,7 +46,7 @@ class NewMenuForm(forms.Form):
 class EditMealForm(forms.ModelForm):
     class Meta:
         model = Meal
-        fields = ('name', 'description', 'image', 'price')
+        fields = ('name', 'description', 'image', 'price_small', 'price_large')
         widgets = {
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 5})
         }

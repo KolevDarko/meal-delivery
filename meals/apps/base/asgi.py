@@ -1,5 +1,5 @@
-# import os
-# import channels.asgi
-#
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meals.settings.development")
-# channel_layer = channels.asgi.get_channel_layer()
+import os
+import channels.asgi
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meals.settings.development")
+channel_layer = channels.asgi.get_channel_layer()

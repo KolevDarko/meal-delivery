@@ -1,12 +1,10 @@
 {% for item in items %}
     from: <a href="https://facebook.com/{{ item.0.buyer_uid }}" target="_blank">{{ item.0.buyer }}</a><br>
-    <div>Адреса: {{ item.0.address }}</div>
-    <div>Телефон: {{ item.0.phone }}</div>
     <div>Достава:
         {% if item.0.delivery %}
             Да
         {% else %}
-            <Не></Не>
+            Не
         {% endif %}
     </div>
     <div>Специјално барање: {{ item.0.special_request }}</div>
@@ -23,4 +21,48 @@
     </form>
     <hr>
 {% endfor %}
+<button onclick="notifyMe()">notify</button>
+<audio id="beep" src="audio/notification_beep.mp3." preload="auto" type="audio/mpeg"></audio>
+
+<script>
+    function playBeep() {
+        document.getElementById("beep").play();
+    }
+
+    // request permission on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    });
+
+    function notifyMe() {
+        playBeep();
+      if (!Notification) {
+        alert('Desktop notifications not available in your browser. Try Chromium.');
+        return;
+      }
+
+      if (Notification.permission !== "granted")
+        Notification.requestPermission();
+      else {
+          var notification = new Notification('Notification title', {
+              icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+              body: "Имате нови нарачки",
+          });
+
+          notification.onclick = function () {
+              window.open(window.location.href);
+          }
+      }
+    }
+
+    setInterval(function () {
+        if( {{ items|length }} > 0)
+        {
+            notifyMe();
+        }
+
+        location.reload();
+    }, 15 * 1000);
+</script>
 

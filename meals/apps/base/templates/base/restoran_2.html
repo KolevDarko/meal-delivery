@@ -84,49 +84,48 @@
                 <div class="container-fluid">
 
                     <center><h1>{{ r.name }}</h1></center>
-                    <center>
-                        <div class="stars">
-                        <form action="" id="rating_form" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input class="star star-5" id="star-5" type="radio" name="star" value="5"
-                            {% if current_rating == 5 %}
-                                    checked="checked"
-                            {% endif %}
-                            />
-                            <label class="star star-5" for="star-5"></label>
-                            <input class="star star-4" id="star-4" type="radio" name="star" value="4"
-                            {% if current_rating == 4 %}
-                                    checked="checked"
-                            {% endif %}
-                            />
-                            <label class="star star-4" for="star-4"></label>
-                            <input class="star star-3" id="star-3" type="radio" name="star" value="3"
-                            {% if current_rating == 3 %}
-                                    checked="checked"
-                            {% endif %}
-                            />
-                            <label class="star star-3" for="star-3"></label>
-                            <input class="star star-2" id="star-2" type="radio" name="star" value="2"
-                            {% if current_rating == 2 %}
-                                    checked="checked"
-                            {% endif %}
-                            />
-                            <label class="star star-2" for="star-2"></label>
-                            <input class="star star-1" id="star-1" type="radio" name="star" value="1"
-                            {% if current_rating == 1 %}
-                                    checked="checked"
-                            {% endif %}
-                            />
-                            <label class="star star-1" for="star-1"></label>
-                        </form>
-                        </div>
-                    </center>
-                    <center>
+{#                    <center>#}
+{#                        <div class="stars">#}
+{#                        <form action="" id="rating_form" method="post" enctype="multipart/form-data">#}
+{#                            {% csrf_token %}#}
+{#                            <input class="star star-5" id="star-5" type="radio" name="star" value="5"#}
+{#                            {% if current_rating == 5 %}#}
+{#                                    checked="checked"#}
+{#                            {% endif %}#}
+{#                            />#}
+{#                            <label class="star star-5" for="star-5"></label>#}
+{#                            <input class="star star-4" id="star-4" type="radio" name="star" value="4"#}
+{#                            {% if current_rating == 4 %}#}
+{#                                    checked="checked"#}
+{#                            {% endif %}#}
+{#                            />#}
+{#                            <label class="star star-4" for="star-4"></label>#}
+{#                            <input class="star star-3" id="star-3" type="radio" name="star" value="3"#}
+{#                            {% if current_rating == 3 %}#}
+{#                                    checked="checked"#}
+{#                            {% endif %}#}
+{#                            />#}
+{#                            <label class="star star-3" for="star-3"></label>#}
+{#                            <input class="star star-2" id="star-2" type="radio" name="star" value="2"#}
+{#                            {% if current_rating == 2 %}#}
+{#                                    checked="checked"#}
+{#                            {% endif %}#}
+{#                            />#}
+{#                            <label class="star star-2" for="star-2"></label>#}
+{#                            <input class="star star-1" id="star-1" type="radio" name="star" value="1"#}
+{#                            {% if current_rating == 1 %}#}
+{#                                    checked="checked"#}
+{#                            {% endif %}#}
+{#                            />#}
+{#                            <label class="star star-1" for="star-1"></label>#}
+{#                        </form>#}
+{#                        </div>#}
+{#                    </center>#}
+{#                    <center>#}
                         Статус: {{ r.get_status_display }}
                     </center><br>
                     <input type="button" value="Прикажи коментари" onclick="showComments()">
                     <img src="{{ r.image.url }}" class="img-responsive main-image" height="100">
-                    <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
                 </div>
             </div>
 
@@ -162,6 +161,10 @@
                                                                     <input type="text" value="{{ meal.id }}" hidden="hidden" name="meal_id">
                                                                     <input type="number" name="quantity" min="1" max="99" value="1">
                                                                     <input type="submit" value="Додај во кошничка">
+                                                                    <div {% if meal.price_small <= 0 %} hidden="hidden" {% endif %}>
+                                                                        <label for="rSmall">Мала: </label><input id="rSmall" type="radio" name="size" value="small" class="radios">
+                                                                        <label for="rLarge">Голема: </label><input id="rLarge" type="radio" name="size" value="large"  checked="checked" class="radios">
+                                                                    </div>
                                                                 </form>
 
                                                             </div>
@@ -174,7 +177,11 @@
                                                             <span style="float:left;">({{ meal.ratings.all.count }})</span>
                                                             </div>
                                                             <div style="text-align: left; padding: 0 0 0 10px">{{ meal.description }}</div>
-                                                            <div style="text-align: left; padding: 0 0 0 10px"><strong>Цена:</strong> {{ meal.price }}МКД</div>
+                                                            <div style="text-align: left; padding: 0 0 0 10px"><strong>Цена:</strong>
+                                                                {% if meal.price_small > 0 %}
+                                                                    {{ meal.price_small }}
+                                                                {% endif %}
+                                                                {{ meal.price_large }}МКД</div>
                                                         </div>
                                                     </div>
                                                         {% endif %}
@@ -231,7 +238,13 @@
 <div id="cart">
     <h3>{{ cart_restoran_name }}</h3>
     {% for meal in meals %}
-        {{ meal.0.name }}  x{{ meal.1 }}<br>
+        {{ meal.0.name }}  - {{ meal.1 }} x {{ meal.2 }}МКД
+        <form method="post">
+            {% csrf_token %}
+            <input type="number"  value="{{ forloop.counter }}" name="cart_loop_counter" hidden="hidden">
+            <input type="submit" value="Отстрани од кошничка">
+        </form>
+        <br>
     {% endfor %}
     <hr>
     Total: {{ sum }}
@@ -263,9 +276,9 @@
 </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-    $('input[type=radio]').on('change', function () {
-        $.post('', $(this).closest("form").serialize())
-    })
+{#    $('input[type=radio]').on('change', function () {#}
+{#        $.post('', $(this).closest("form").serialize())#}
+{#    });#}
 
 {#    $('.order_form').submit(function (e) {#}
 {#        $.post('', $(this).serialize());#}
@@ -294,6 +307,8 @@
     function showComments() {
         $("#comments").show();
     }
+
+
     </script>
 
 {% endblock %}

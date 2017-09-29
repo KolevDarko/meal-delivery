@@ -11,8 +11,9 @@ class Restoran(models.Model):
     image = models.ImageField(upload_to="documents/", blank=True, null=True);
     city = models.CharField(max_length=30);
     status = models.CharField(max_length=30, default='open', choices=[
-        ('open', 'отворено'),
-        ('busy', 'зафатено'),
+        ('open', 'отворено (очекувано време на достава: 15-40 минути)'),
+        ('busy', 'средно зафатено (очекувано време на достава: 30-60 минути)'),
+        ('extra_busy', 'презафатен (очекувано време на достава: повеќе од еден час)'),
         ('closed', 'затворено'),
     ]);
 
@@ -41,7 +42,8 @@ class Meal(models.Model):
     description = models.TextField(max_length=500)
     menu = models.ForeignKey(Menu, related_name='meals', on_delete=models.CASCADE)
     image = models.ImageField(upload_to="documents/", blank=True, null=True)
-    price = models.IntegerField(default=0)
+    price_small = models.IntegerField(default=0)
+    price_large = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -87,6 +89,7 @@ class My_key_val(models.Model):
     container = models.ForeignKey(Order, related_name='meals', db_index=True)
     key = models.CharField(max_length=100, db_index=True)
     value = models.CharField(max_length=100, db_index=True)
+    price = models.IntegerField(default=0, db_index=True)
 
 
 class RestoranComment(models.Model):

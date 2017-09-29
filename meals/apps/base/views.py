@@ -14,34 +14,30 @@ from .helper_objects import Cart
 def home(request):
     user = request.user
 
-    if user.is_anonymous:
-        return redirect('login')
-
+    if not user.is_anonymous and user.groups.filter(name='owners').exists():
+        restoran = Restoran.objects.get(owner=user)
+        return redirect('edit_restoran', pk=restoran.id)
     else:
-        if user.groups.filter(name='owners').exists():
-            restoran = Restoran.objects.get(owner=user)
-            return redirect('edit_restoran', pk=restoran.id)
-        else:
-            if 'city' in request.session:
-                """ Default view for the root """
-                city = request.session["city"]
-                restorans_all = Restoran.objects.filter(city=city)
-                restorani = restorans_all.filter(type='restoran')
-                picerii = restorans_all.filter(type='picerija')
-                burekcilnici = restorans_all.filter(type='burekcilnica')
-                sendvicari = restorans_all.filter(type='sendvicara')
+        if 'city' in request.session:
+            """ Default view for the root """
+            city = request.session["city"]
+            restorans_all = Restoran.objects.filter(city=city)
+            restorani = restorans_all.filter(type='restoran')
+            picerii = restorans_all.filter(type='picerija')
+            burekcilnici = restorans_all.filter(type='burekcilnica')
+            sendvicari = restorans_all.filter(type='sendvicara')
 
-                return render(request, 'base/home.html',
-                              {
-                                  'restorans_all': restorans_all,
-                                  'lista_restorani': restorani,
-                                  'lista_picerii': picerii,
-                                  'lista_burekcilnici': burekcilnici,
-                                  'lista_sendvicari': sendvicari,
-                                  'city': city,
-                              })
-            else:
-                return redirect('pick_city')
+            return render(request, 'base/home.html',
+                          {
+                              'restorans_all': restorans_all,
+                              'lista_restorani': restorani,
+                              'lista_picerii': picerii,
+                              'lista_burekcilnici': burekcilnici,
+                              'lista_sendvicari': sendvicari,
+                              'city': city,
+                          })
+        else:
+            return redirect('pick_city')
 
 def pick_city(request):
         if request.method == 'POST':
@@ -150,18 +146,25 @@ def edit_restoran(request, pk):
 
 def tester(request):
     cart = request.session.get('cart', Cart)
-    return render(request, 'base/tester.html', {'items': cart.items})
+    return render(request, 'base/tester.html', {'items': cart})
 
 def restoran2(request, pk):
     r = get_object_or_404(Restoran, pk=pk)
     comments = RestoranComment.objects.all().filter(restoran=r)
     if 'cart_restoran_name' in request.session:
         if request.session['cart_restoran_name'] != r.name:
-            request.session['cart'] = {}
+            request.session['cart'] = []
             request.session['cart_restoran_name'] = r.name
     if request.method == 'POST':
+        #remove item from cart
+        if 'cart_loop_counter' in request.POST:
+            cart_index = int(request.POST['cart_loop_counter']) - 1
+            cart = request.session['cart']
+            cart.pop(cart_index)
+            request.session['cart'] = cart
+
         #new comment
-        if 'comment_text' in request.POST:
+        elif 'comment_text' in request.POST:
             if len(request.POST['comment_text']):
                 comment = RestoranComment(text=request.POST['comment_text'], restoran=r, user=request.user)
                 comment.save()
@@ -177,20 +180,48 @@ def restoran2(request, pk):
             r.save()
 
         else:
+            # if 'cart_restoran_name' in request.session:
+            #     if request.session['cart_restoran_name'] != r.name:
+            #         request.session['cart'] = {}
+            #         request.session['cart_restoran_name'] = r.name
+            # else:
+            #     request.session['cart'] = {}
+            #     request.session['cart_restoran_name'] = r.name
+            #
+            # form = forms.Form(data=request.POST)
+            # if form.is_valid():
+            #     meal_id = request.POST['meal_id']
+            #     quantity = request.POST['quantity']
+            #     cart = request.session['cart']
+            #     cart[meal_id] = quantity
+            #     request.session['cart'] = cart
+
             if 'cart_restoran_name' in request.session:
                 if request.session['cart_restoran_name'] != r.name:
-                    request.session['cart'] = {}
+                    request.session['cart'] = []
                     request.session['cart_restoran_name'] = r.name
             else:
-                request.session['cart'] = {}
+                request.session['cart'] = []
                 request.session['cart_restoran_name'] = r.name
 
             form = forms.Form(data=request.POST)
             if form.is_valid():
                 meal_id = request.POST['meal_id']
                 quantity = request.POST['quantity']
+                price = Meal.objects.all().get(pk=meal_id).price_large
+                size = request.POST['size']
+                if size == 'small':
+                    price = Meal.objects.all().get(pk=meal_id).price_small
+
+                cart_item = {
+                    'meal_id': meal_id,
+                    'quantity': quantity,
+                    'size': size,
+                    'price': price,
+                }
+
                 cart = request.session['cart']
-                cart[meal_id] = quantity
+                cart.append(cart_item)
                 request.session['cart'] = cart
 
     if 'city' in request.session:
@@ -205,7 +236,7 @@ def restoran2(request, pk):
     sendvicari = restorans_all.filter(type='sendvicara')
     current_rating = 0
 
-    if RestoranRating.objects.filter(user=request.user, restoran=r).count():
+    if not request.user.is_anonymous and RestoranRating.objects.filter(user=request.user, restoran=r).count():
         rat = RestoranRating.objects.get(user=request.user, restoran=r)
         current_rating = rat.rating
 
@@ -239,10 +270,10 @@ def restoran2(request, pk):
 
     meals = []
     sum = 0
-    for key, value in cart.items():
-        meal = Meal.objects.get(pk=key)
-        meals.append((meal, value))
-        sum += int(value) * meal.price
+    for cart_item in cart:
+        meal = Meal.objects.get(pk=cart_item['meal_id'])
+        meals.append((meal, cart_item['quantity'], cart_item['price']))
+        sum += int(cart_item['quantity']) * cart_item['price']
 
 
     return render(request, 'base/restoran_2.html', context={
@@ -345,27 +376,36 @@ def show_cart(request):
     })
 
 def make_order(request):
-    restoran_name = request.session['cart_restoran_name']
-    cart = request.session['cart'];
+    user = request.user
 
-    if request.method == 'POST':
-        form = OrderForm(data=request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            user = request.user
-            uid = user.social_auth.get(provider='facebook').uid
-            restoran = Restoran.objects.get(name=restoran_name)
-            order = Order(restoran=restoran, buyer=user, buyer_uid=uid, address=data['address'],
-                          phone=data['phone'], delivery=data['delivery'], special_request=data['special_request'])
-            order.save()
-            for key, value in cart.items():
-                pair = My_key_val(container=order, key=key, value=value)
-                pair.save()
-            request.session['cart'] = {}
-            return redirect('my_orders')
+    if user.is_anonymous:
+        return redirect('login')
+
+    if user.groups.filter(name='owners').exists():
+        return redirect('home')
+
     else:
-        form = OrderForm()
-    return render(request, 'base/make_order.html', {'form': form})
+        restoran_name = request.session['cart_restoran_name']
+        cart = request.session['cart'];
+
+        if request.method == 'POST':
+            form = OrderForm(data=request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                user = request.user
+                uid = user.social_auth.get(provider='facebook').uid
+                restoran = Restoran.objects.get(name=restoran_name)
+                order = Order(restoran=restoran, buyer=user, buyer_uid=uid, address=data['address'],
+                              phone=data['phone'], delivery=data['delivery'], special_request=data['special_request'])
+                order.save()
+                for cart_item in cart:
+                    pair = My_key_val(container=order, key=cart_item['meal_id'], value=cart_item['quantity'], price=cart_item['price'])
+                    pair.save()
+                request.session['cart'] = []
+                return redirect('my_orders')
+        else:
+            form = OrderForm()
+        return render(request, 'base/make_order.html', {'form': form})
 
 def orders_for_restoran(request, pk):
     if request.method == 'POST':
@@ -388,7 +428,7 @@ def orders_for_restoran(request, pk):
         for key_val in key_vals:
             meal = Meal.objects.get(id=key_val.key)
             meal_name = meal.name
-            total_price += meal.price * int(key_val.value)
+            total_price += int(key_val.price) * int(key_val.value)
             meals_in_order.append((meal_name, key_val.value))
         items.append((order, meals_in_order, total_price))
 
@@ -414,7 +454,7 @@ def approved_orders_for_restoran(request, pk):
         for key_val in key_vals:
             meal = Meal.objects.get(id=key_val.key)
             meal_name = meal.name
-            total_price += meal.price * int(key_val.value)
+            total_price += int(key_val.price) * int(key_val.value)
             meals_in_order.append((meal_name, key_val.value))
         items.append((order, meals_in_order, total_price))
 
@@ -456,7 +496,7 @@ def orders_for_user(request):
         for key_val in key_vals:
             meal = Meal.objects.get(id=key_val.key)
             meal_name = meal.name
-            total_price += meal.price * int(key_val.value)
+            total_price += int(key_val.price) * int(key_val.value)
             meals_in_order.append((meal_name, key_val.value, key_val.key))
         items.append((order, meals_in_order, total_price))
 

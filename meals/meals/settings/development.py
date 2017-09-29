@@ -49,7 +49,7 @@ INSTALLED_APPS += [
 #         "CONFIG": {
 #             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
 #         },
-#         "ROUTING": "chat.routing.channel_routing",
+#         "ROUTING": "apps.base.routing.channel_routing",
 #     },
 # }
 
@@ -96,4 +96,4 @@ try:
 except ImportError:
     pass
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'make_order'

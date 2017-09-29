@@ -46,6 +46,10 @@
     <button type="submit">Save</button>
     </form>
 
+    <a href="{% url 'new_menu' %}">Додади ново мени</a>
+    <br>
+    <a href="{% url 'new_meal' %}">Додади нов артикл</a>
+
     <script>
     $('input[type=radio]').on('change', function () {
         $.post('', $(this).closest("form").serialize())
