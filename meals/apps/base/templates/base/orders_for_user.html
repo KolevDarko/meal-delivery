@@ -4,7 +4,6 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <style>
-
         div.stars {
             width: 200px;
             display: inline-block;
@@ -58,7 +57,7 @@
             font-family: FontAwesome;
         }
     </style>
-
+    <div id="orders_list">
     {% for item in items %}
     <a href="{% url 'restoran2' pk=item.0.restoran.id %}" target="_blank">from: {{ item.0.restoran.name }}</a><br>
     {% for pair in item.1 %}
@@ -93,14 +92,13 @@
             {{ pair.0 }} x{{ pair.1 }}
 
         {% endif %}
-
         <br>
     {% endfor %}
     Total: {{ item.2 }}<br>
     <strong>Статус: {{ item.0.get_status_display }}</strong>
     <hr>
     {% endfor %}
-
+    </div>
     <style>
         #comments{
             display: {{ comments_display }};
@@ -113,6 +111,16 @@
             left: 30%;
             top: 20%;
             overflow-y: auto;
+        }
+
+    #orders_list{
+            padding-left: 15%;
+        }
+
+        @media (max-width: 768px) {
+            #orders_list{
+                padding-left: 0;
+            }
         }
     </style>
 

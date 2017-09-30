@@ -62,7 +62,7 @@ class EditMenuForm(forms.ModelForm):
 class EditRestoranForm(forms.ModelForm):
     class Meta:
         model = Restoran
-        fields = ['description', 'image', 'status']
+        fields = ['description', 'image', 'status', 'free_delivery_limit']
         widgets = {
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 5})
         }

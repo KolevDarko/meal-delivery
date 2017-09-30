@@ -76,6 +76,19 @@
         em {
             font-style: italic;
         }
+
+        @media (min-width: 768px) {
+            .meal_card {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .meal_card {
+                width: 80%;
+                margin-left: 10%;
+            }
+        }
     </style>
 <div class="container-fluid">
     <div class="row">
@@ -84,6 +97,9 @@
                 <div class="container-fluid">
 
                     <center><h1>{{ r.name }}</h1></center>
+                    <center><h3>{{ r.description }}</h3>
+                    Статус: {{ r.get_status_display }}<br>
+                    Бесплатна достава над: {{ r.free_delivery_limit }}ДЕН
 {#                    <center>#}
 {#                        <div class="stars">#}
 {#                        <form action="" id="rating_form" method="post" enctype="multipart/form-data">#}
@@ -122,7 +138,6 @@
 {#                        </div>#}
 {#                    </center>#}
 {#                    <center>#}
-                        Статус: {{ r.get_status_display }}
                     </center><br>
                     <input type="button" value="Прикажи коментари" onclick="showComments()">
                     <img src="{{ r.image.url }}" class="img-responsive main-image" height="100">
@@ -147,7 +162,7 @@
                                                     {% spaceless %}
                                                     {% for meal in menu.meals.all %}
                                                     {% if meal.is_active %}
-                                                    <div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
+                                                    <div class="meal_card col-sm-3 col-xs-3 col-lg-3 col-md-3">
                                                         <div class="container-a">
                                                             <a href="#x"><img src="
                                                                 {% if meal.image.file != none %} {{ meal.image.url }} {% else %} http://placehold.it/500x500 {% endif %}
@@ -215,6 +230,7 @@
         border: 1px solid;
         left: 80%;
         top: 0;
+        overflow-y: scroll;
 
     {% if sum == 0 %}
         display: none;
@@ -233,6 +249,24 @@
         left: 30%;
         top: 20%;
         overflow-y: auto;
+    }
+
+    #show_cart{
+            position: fixed;
+            z-index: 1;
+            height: 20px;
+            width: 40px;
+            left: 3%;
+            top: 90%;
+        }
+
+    @media (max-width: 768px) {
+        #cart{
+            width: 70%;
+            height: 60%;
+            left: 15%;
+            top: 20%;
+        }
     }
 </style>
 <div id="cart">
@@ -258,21 +292,27 @@
 </div>
 
 <div id="comments">
-    <form action="" id="comment_form" class="order_form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" value="{{ restoran.id }}" hidden="hidden" name="restoran_id">
-        <textarea form="comment_form" placeholder="Остави коментар" name="comment_text" rows="3" cols="20"></textarea>
-        <!--<input type="text" placeholder="Остави коментар" name="comment_text">-->
-        <input type="submit" value="Остави коментар">
-    </form>
+{#    <form action="" id="comment_form" class="order_form" method="post" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        <input type="text" value="{{ restoran.id }}" hidden="hidden" name="restoran_id">#}
+{#        <textarea form="comment_form" placeholder="Остави коментар" name="comment_text" rows="3" cols="20"></textarea>#}
+{#        <!--<input type="text" placeholder="Остави коментар" name="comment_text">-->#}
+{#        <input type="submit" value="Остави коментар">#}
+{#    </form>#}
     <div>
-        Коментари:
+        <center><h2>Коментари:</h2></center>
         {% for comment in comments %}
             <div>
             <strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr>
             </div>
         {% endfor %}
     </div>
+</div>
+
+<div id="show_cart">
+<button class="btn btn-primary"onclick="showCart()">
+    Кошничка
+</button>
 </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
@@ -287,13 +327,17 @@
 
     function setPictureHeight() {
         var cw = $('.meal-image').width();
-        cw = cw * 0.67
+        cw = cw * 0.67;
         $('.meal-image').css({'height':cw+'px'});
     }
     window.onresize = setPictureHeight;
     setPictureHeight();
 
     $("#comments").hide();
+
+    if(window.width > 768) {
+            $("#cart").hide();
+    }
 
     $(document).mouseup(function(e) {
         var container = $("#comments");
@@ -302,13 +346,21 @@
         {
             container.hide();
         }
+
+        var crt = $("#cart");
+        if (!crt.is(e.target) && crt.has(e.target).length === 0)
+        {
+            crt.hide();
+        }
     });
 
     function showComments() {
         $("#comments").show();
     }
 
-
+    function showCart() {
+        $("#cart").show()
+    }
     </script>
 
 {% endblock %}

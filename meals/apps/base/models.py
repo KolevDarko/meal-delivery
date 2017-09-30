@@ -2,18 +2,21 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Restoran(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(max_length=500)
     owner = models.ForeignKey(User, null=True)
-    type = models.CharField(max_length=20, default='restoran');
-    image = models.ImageField(upload_to="documents/", blank=True, null=True);
-    city = models.CharField(max_length=30);
+    type = models.CharField(max_length=20, default='restoran')
+    image = models.ImageField(upload_to="documents/", blank=True, null=True)
+    city = models.CharField(max_length=30)
+    free_delivery_limit = models.IntegerField(default=0)
+    recomended = models.BooleanField(default=False)
     status = models.CharField(max_length=30, default='open', choices=[
-        ('open', 'отворено (очекувано време на достава: 15-40 минути)'),
-        ('busy', 'средно зафатено (очекувано време на достава: 30-60 минути)'),
-        ('extra_busy', 'презафатен (очекувано време на достава: повеќе од еден час)'),
+        ('open', 'отворено (достава: 15-40 минути)'),
+        ('busy', 'средно зафатено (достава: 30-60 минути)'),
+        ('extra_busy', 'презафатен (достава: повеќе од еден час)'),
         ('closed', 'затворено'),
     ]);
 
@@ -74,6 +77,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=25)
     special_request = models.CharField(max_length=200, default='')
     delivery = models.BooleanField(default=True)
+    creation_time = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=25, default='unassigned', choices=[
         ('unassigned', 'Неопределена'),
         ('unapproved', 'Одбиена'),

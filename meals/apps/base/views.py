@@ -26,10 +26,12 @@ def home(request):
             picerii = restorans_all.filter(type='picerija')
             burekcilnici = restorans_all.filter(type='burekcilnica')
             sendvicari = restorans_all.filter(type='sendvicara')
+            recomended = restorans_all.filter(recomended=True)
 
             return render(request, 'base/home.html',
                           {
                               'restorans_all': restorans_all,
+                              'recomended': recomended,
                               'lista_restorani': restorani,
                               'lista_picerii': picerii,
                               'lista_burekcilnici': burekcilnici,
@@ -125,7 +127,7 @@ def edit_restoran(request, pk):
 
             for menu in restoran_instance.menus.all():
                 for meal in menu.meals.all():
-                    meal.is_active = False;
+                    meal.is_active = False
                     meal.save()
             for key in request.POST:
                 if 'is_active' in key:

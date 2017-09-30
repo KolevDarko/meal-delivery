@@ -2,7 +2,7 @@
 {% load compress %}
 
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,340 +11,358 @@
 
     <title>{% block page_title %}ОнЛајн Храна{% endblock %}</title>
 
-  {% if debug %}
-    <link rel="stylesheet/less" href="{% static 'less/app.less' %}">
-    <script type="text/javascript" src="{% static 'js/libs/less.min.js' %}"></script>
-  {% else %}
-    {% compress css %}
-    <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/app.less' %}">
-    {% endcompress %}
-  {% endif %}
+    {% if debug %}
+        <link rel="stylesheet/less" href="{% static 'less/app.less' %}">
+        <script type="text/javascript" src="{% static 'js/libs/less.min.js' %}"></script>
+    {% else %}
+        {% compress css %}
+            <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/app.less' %}">
+        {% endcompress %}
+    {% endif %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  <!-- Custom CSS -->
+    <!-- Custom CSS -->
     <link href="{% static 'vendor/bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
-    <link href=" {% static 'css/navbar-fixed-side.css'%} " rel="stylesheet" />
+    <link href=" {% static 'css/navbar-fixed-side.css' %} " rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'css/mojcss.css' %}">
 
 </head>
 
 <body>
 {% block body %}
-
-<div class="container-fluid">
-	<div class="row">
-    <!-- navbar - meni -->
-    <div class="col-sm-3 col-lg-2">
-            <nav class="navbar navbar-default navbar-fixed-side">
-
-                <!-- normal collapsible navbar markup -->
-
-            {% block navigation_list %}
-                <ul>
-                    <a href="/"><h2>ОнЛајн <br> Храна</h2></a>
-
-                    <!--moe meni-->
-                    <li><a href="index.php">Почетна</a> </li>
-                    <li class="showFirst">Ресторанти<span
-                                class="sb-caret"></span></a>
-                        <ul>
-                            {% for rest in lista_restorani %}
-                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li class="showFirst">Пицерии<span
-                                class="sb-caret"></span>
-                        <ul>
-                            {% for rest in lista_picerii %}
-                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li class="showFirst">Сендвичари<span
-                                class="sb-caret"></span>
-                        <ul>
-                            {% for rest in lista_sendvicari %}
-                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li class="showFirst">Бурекчилници<span
-                                class="sb-caret"></span>
-                        <ul>
-                            {% for rest in lista_burekcilnici %}
-                                <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a> </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li><a href="kontakt.php">Контакт</a></li>
-                    <li><a href="za_nas.php">За Нас</a> </li>
-                    <li><a href="login.php">Најава </a></li>
-                </ul>
-                {% endblock %}
-            </nav>
-    </div>
-    <div class="container">
-    {% block content %}
-
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
-
-            .star-ratings-sprite {
-                background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
-                font-size: 0;
-                height: 21px;
-                line-height: 0;
-                overflow: hidden;
-                text-indent: -999em;
-                width: 110px;
-                margin: 0 auto;
-                float: left;
-            }
-            .star-ratings-sprite-rating {
-                background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
-                background-position: 0 100%;
-                float: left;
-                height: 21px;
-                display: block;
-            }
-            em {
-                font-style: italic;
-            }
-
-            .restoran-description{
-                float: left;
-            }
-
-            .restoran-image{
-                width: 200px;
-
-            }
-
-        </style>
-
-		<div class="col-lg-10">
-			<div class="row">
-				<div class="container-fluid">
-
-					<center><h1>ОнЛајн Храна во {{ city }}  {{ user}}</h1></center>
-					<img src="{% static 'img/slider1.jpg' %}" class="img-responsive main-image" height="100">
-
-				</div>
-			</div>
-
-			<div class="row-sredina">
-
-		     <h3>Наша препорака </h3>
-
-				<div class="container">
-					<div class="col-md-11">
-
-
-						<div class="well-none">
-							<div id="myCarousel" class="carousel slide">
-
-								<!-- Carousel items -->
-								<div class="carousel-inner">
-									<div class="item active">
-										<div class="row">
-
-											<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-												<div class="container-a">
-													<a href="aledar.php"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-													<div class="overlay-a">
-														<div class="text-a">Aledar</div>
-													</div>
-												</div>
-												<p>
-													<img style="float: left; margin: 5px;" ... />
-													Aledar
-												</p>
-											</div>
-
-											<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-												<div class="container-a">
-													<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-													<div class="overlay-a">
-														<div class="text-a">Hello World</div>
-													</div>
-												</div>
-												<p>
-													<img style="float: left; margin: 5px;"  />
-													Text goes here...
-												</p>
-											</div>
-
-											<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-												<div class="container-a">
-													<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-													<div class="overlay-a">
-														<div class="text-a">Hello World</div>
-													</div>
-												</div>
-												<p>
-													<img style="float: left; margin: 5px;"  />
-													Text goes here...
-												</p>
-											</div>
-
-											<div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-												<div class="container-a">
-													<a href="#x"><img src="http://placehold.it/500x500" alt="Image" class="img-responsive" width="220" height="220"></a>
-													<div class="overlay-a">
-														<div class="text-a">Hello World</div>
-													</div>
-												</div>
-												<p>
-													<img style="float: left; margin: 5px;"  />
-													Text goes here
-												</p>
-											</div>
-
-										</div>
-										<!--/row-->
-									</div>
-
-									<!--/row-->
-								</div>
-								<!--/item-->
-
-								<!--/item-->
-							</div>
-							<!--/carousel-inner-->
-							<!-- ostaveno za nekoj pat ako ima vrtenje
-                            <a class="left carousel-control" href="#myCarousel" data-slide="prev"><i class="fa fa-chevron-left fa-4"></i></a>
-
-                            <a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="fa fa-chevron-right fa-4"></i></a>
-                            -->
-						</div>
-						<!--/myCarousel-->
-					</div>
-					<!--/well-->
-				</div>
-			</div>
-
-			<div class="container-fluid">
-				<div class="row-sredina">
-					<div class="col-lg-20">
-						<h2>Сите</h2>
-
-						<div class="container">
-							<div class="col-md-11">
-
-
-								<div class="well-none">
-									<div id="myCarousel" class="carousel slide">
-
-										<!-- Carousel items -->
-										<div class="carousel-inner">
-											<div class="item active">
-												<div class="row">
-                                                    {% for restoran in restorans_all %}
-
-                                                            <div class="col-sm-3 col-xs-3 col-lg-3 col-md-3">
-                                                                <a href="{% url 'restoran2' pk=restoran.id %}">
-                                                                    <div class="container-a">
-                                                                        <img src="{{ restoran.image.url }}" alt="Image" class="img-responsive restoran-image" width="220" height="220">
-                                                                        <div class="overlay-a">
-                                                                            <div class="restoran-description">{{ restoran.description }} </div><br>
-                                                                            <div class="star-ratings-sprite"><span style="width:{{ restoran.average_rating }}%" class="star-ratings-sprite-rating"></span></div>
-                                                                            <span style="float:left;">({{ restoran.ratings.all.count }})</span>
-                                                                            <div style="float:left;">Статус: {{ restoran.get_status_display }}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <p>
-                                                                        <img style="float: left; margin: 5px;"  />
-                                                                        {{ restoran.name }}
-                                                                    </p>
-                                                                </a>
-                                                                <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">коментари</button>
-                                                            </div>
-                                                    {% endfor %}
-
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!--/myCarousel-->
-							</div>
-							<!--/well-->
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-        <div id="comments">
-        </div>
-
-        <style>
-            #comments{
+    <style>
+        @media (min-width: 768px) {
+            .navbar {
+                height: 100%;
                 position: fixed;
-                width: 40%;
-                height: 60%;
-                background: rgba(130,130,130,.8);
-                padding: 20px 22px;
-                border: 1px solid;
-                left: 30%;
-                top: 20%;
-                overflow-y: auto;
+                width: 15%;
             }
-        </style>
+        }
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script>
-
-            function showCommentsForRestoran(comments_content) {
-                document.getElementById("comments").innerHTML = comments_content;
-                $("#comments").show();
+        @media (max-width: 768px){
+            .restoran_card {
+                width: 80%;
+                margin-left: 10%;
             }
+        }
+    </style>
 
-            function setPictureHeight() {
-                var cw = $('.restoran-image').width();
-                $('.restoran-image').css({'height':cw+'px'});
-            }
-            window.onresize = setPictureHeight;
-            setPictureHeight();
+    <div class="container-fluid">
+        <div class="row">
+            <!-- navbar - meni -->
+            <div class="col-sm-3 col-lg-2">
+                <nav class="navbar navbar-default navbar-fixed-side">
 
-            $("#comments").hide();
+                    <!-- normal collapsible navbar markup -->
 
-            $(document).mouseup(function(e) {
-                var container = $("#comments");
-                // if the target of the click isn't the container nor a descendant of the container
-                if (!container.is(e.target) && container.has(e.target).length === 0)
-                {
-                    container.hide();
-                }
-            });
-                </script>
+                    {% block navigation_list %}
+                        <ul>
+                            <a href="/"><h2>ОнЛајн <br> Храна</h2></a>
 
-	{% endblock %}</div>
+                            <!--moe meni-->
+                            <li><a href="index.php">Почетна</a></li>
+                            <li class="showFirst">Ресторанти<span
+                                    class="sb-caret"></span></a>
+                                <ul>
+                                    {% for rest in lista_restorani %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="showFirst">Пицерии<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_picerii %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="showFirst">Сендвичари<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_sendvicari %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="showFirst">Бурекчилници<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_burekcilnici %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endblock %}
+                </nav>
+            </div>
+            <div class="container">
+                {% block content %}
+
+                    <style>
+                        @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
+
+                        .star-ratings-sprite {
+                            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+                            font-size: 0;
+                            height: 21px;
+                            line-height: 0;
+                            overflow: hidden;
+                            text-indent: -999em;
+                            width: 110px;
+                            margin: 0 auto;
+                            float: left;
+                        }
+
+                        .star-ratings-sprite-rating {
+                            background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+                            background-position: 0 100%;
+                            float: left;
+                            height: 21px;
+                            display: block;
+                        }
+
+                        em {
+                            font-style: italic;
+                        }
+
+                        .restoran-description {
+                            float: left;
+                        }
+
+                        .restoran-image {
+                            width: 200px;
+
+                        }
+
+                    </style>
+
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="container-fluid">
+
+                                <center><h1>ОнЛајн Храна во {{ city }} {{ user }}</h1></center>
+                                <img src="{% static 'img/slider1.jpg' %}" class="img-responsive main-image"
+                                     height="100">
+
+                            </div>
+                        </div>
+
+                        {% if recomended.count %}
+                            <div class="row-sredina">
+
+
+                                <h3>Наша препорака </h3>
+
+                                <div class="container">
+                                    <div class="col-md-11">
+
+
+                                        <div class="well-none">
+                                            <div id="myCarousel" class="carousel slide">
+
+
+                                                <!-- Carousel items -->
+                                                <div class="carousel-inner">
+                                                    <div class="item active">
+                                                        <div class="row">
+
+                                                            {% for restoran in recomended %}
+                                                                <div class="restoran_card col-sm-3 col-xs-3 col-lg-3 col-md-3">
+                                                                    <a href="{% url 'restoran2' pk=restoran.id %}">
+                                                                        <div class="container-a">
+                                                                            <img src="{{ restoran.image.url }}"
+                                                                                 alt="Image"
+                                                                                 class="img-responsive restoran-image"
+                                                                                 width="220" height="220">
+                                                                            <div class="overlay-a">
+                                                                                <div class="restoran-description">{{ restoran.description }} </div>
+                                                                                <br>
+                                                                                <div class="star-ratings-sprite"><span
+                                                                                        style="width:{{ restoran.average_rating }}%"
+                                                                                        class="star-ratings-sprite-rating"></span>
+                                                                                </div>
+                                                                                <span style="float:left;">({{ restoran.ratings.all.count }})</span>
+                                                                                <div style="float:left;">
+                                                                                    Статус: {{ restoran.get_status_display }}</div>
+                                                                                <div style="float:left;">
+                                                                                    Бесплатна достава
+                                                                                    над: {{ restoran.free_delivery_limit }}ДЕН
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <p>
+                                                                            <img style="float: left; margin: 5px;"/>
+                                                                            {{ restoran.name }}
+                                                                        </p>
+                                                                    </a>
+                                                                    <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
+                                                                        коментари
+                                                                    </button>
+                                                                </div>
+
+                                                            {% endfor %}
+
+                                                        </div>
+                                                        <!--/row-->
+                                                    </div>
+
+                                                    <!--/row-->
+                                                </div>
+                                                <!--/item-->
+
+                                                <!--/item-->
+                                            </div>
+                                            <!--/carousel-inner-->
+                                            <!-- ostaveno za nekoj pat ako ima vrtenje
+                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev"><i class="fa fa-chevron-left fa-4"></i></a>
+
+                                            <a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="fa fa-chevron-right fa-4"></i></a>
+                                            -->
+                                        </div>
+                                        <!--/myCarousel-->
+                                    </div>
+                                    <!--/well-->
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="container-fluid">
+                            <div class="row-sredina">
+                                <div class="col-lg-20">
+                                    <h2>Сите</h2>
+
+                                    <div class="container">
+                                        <div class="col-md-11">
+
+
+                                            <div class="well-none">
+                                                <div id="myCarousel" class="carousel slide">
+
+                                                    <!-- Carousel items -->
+                                                    <div class="carousel-inner">
+                                                        <div class="item active">
+                                                            <div class="row">
+                                                                {% for restoran in restorans_all %}
+
+                                                                    <div class="restoran_card col-sm-3 col-xs-3 col-lg-3 col-md-3">
+                                                                        <a href="{% url 'restoran2' pk=restoran.id %}">
+                                                                            <div class="container-a">
+                                                                                <img src="{{ restoran.image.url }}"
+                                                                                     alt="Image"
+                                                                                     class="img-responsive restoran-image"
+                                                                                     width="220" height="220">
+                                                                                <div class="overlay-a">
+                                                                                    <div class="restoran-description">{{ restoran.description }} </div>
+                                                                                    <br>
+                                                                                    <div class="star-ratings-sprite">
+                                                                                        <span style="width:{{ restoran.average_rating }}%"
+                                                                                              class="star-ratings-sprite-rating"></span>
+                                                                                    </div>
+                                                                                    <span style="float:left;">({{ restoran.ratings.all.count }})</span>
+                                                                                    <div style="float:left;">
+                                                                                        Статус: {{ restoran.get_status_display }}</div>
+                                                                                    <div style="float:left;">
+                                                                                        Бесплатна достава
+                                                                                        над: {{ restoran.free_delivery_limit }}ДЕН
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <p>
+                                                                                <img style="float: left; margin: 5px;"/>
+                                                                                {{ restoran.name }}
+                                                                            </p>
+                                                                        </a>
+                                                                        <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
+                                                                            коментари
+                                                                        </button>
+                                                                    </div>
+                                                                {% endfor %}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--/myCarousel-->
+                                        </div>
+                                        <!--/well-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="comments">
+                    </div>
+
+                    <style>
+                        #comments {
+                            position: fixed;
+                            width: 40%;
+                            height: 60%;
+                            background: rgba(130, 130, 130, .8);
+                            padding: 20px 22px;
+                            border: 1px solid;
+                            left: 30%;
+                            top: 20%;
+                            overflow-y: auto;
+                        }
+                    </style>
+
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                    <script>
+
+                        function showCommentsForRestoran(comments_content) {
+                            document.getElementById("comments").innerHTML = comments_content;
+                            $("#comments").show();
+                        }
+
+                        function setPictureHeight() {
+                            var cw = $('.restoran-image').width();
+                            $('.restoran-image').css({'height': cw + 'px'});
+                        }
+                        window.onresize = setPictureHeight;
+                        setPictureHeight();
+
+                        $("#comments").hide();
+
+                        $(document).mouseup(function (e) {
+                            var container = $("#comments");
+                            // if the target of the click isn't the container nor a descendant of the container
+                            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                                container.hide();
+                            }
+                        });
+                    </script>
+
+                {% endblock %}</div>
         </div>
-</div>
+    </div>
 
-  <!-- Google CDN jQuery with a local fallback -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="/static/js/libs/jquery-1.11.2.min.js"><\/script>')</script>
+    <!-- Google CDN jQuery with a local fallback -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/static/js/libs/jquery-1.11.2.min.js"><\/script>')</script>
 
-  {% compress js %}
-    <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/app.js' %}"></script>
-  {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script>
+        <script src="{% static 'js/app.js' %}"></script>
+    {% endcompress %}
 
-  <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID -->
-  <script>
-    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-    s.parentNode.insertBefore(g,s)}(document,'script'));
-  </script>
+    <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID -->
+    <script>
+        var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
+        (function (d, t) {
+            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            g.src = ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g, s)
+        }(document, 'script'));
+    </script>
 {% endblock %}
 </body>
 </html>
