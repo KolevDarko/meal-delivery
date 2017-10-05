@@ -71,7 +71,7 @@ class OrderForm(forms.ModelForm):
 
     special_request = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={'cols': 40, 'rows': 5}),
+        widget=forms.Textarea(attrs={'cols': 40, 'rows': 5, 'placeholder': 'Вашето специјално барање (пр. без мајонез, без салати и слично) внесете го овде'}),
         )
 
     class Meta:

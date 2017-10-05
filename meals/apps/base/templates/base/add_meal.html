@@ -7,6 +7,14 @@
 {% block page_title %}Add a {{ type }} {% endblock page_title %}
 
 {% block content %}
+    <style>
+        @media (min-width: 768px) {
+        #content{
+            margin-left: 15%;
+        }
+    }
+    </style>
+    <div id="content">
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="customInput">Name: {{ form.name }}</div>
@@ -17,4 +25,5 @@
         <div class="customInput">Image: {{ form.image }}</div>
         <div><button type="submit">Add meal</button></div>
     </form>
+    </div>
 {% endblock content %}

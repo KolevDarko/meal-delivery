@@ -9,7 +9,9 @@
     <meta name="description" content="{% block meta_description %}{% endblock %}">
     <meta name="author" content="{% block meta_author %}{% endblock %}">
 
-    <title>{% block page_title %}ОнЛајн Храна{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="/media/favicon.png"/>
+
+    <title>{% block page_title %}bidisit{% endblock %}</title>
 
     {% if debug %}
         <link rel="stylesheet/less" href="{% static 'less/app.less' %}">
@@ -36,6 +38,10 @@
 <body>
 {% block body %}
     <style>
+        .navbar {
+            overflow-y: scroll;
+        }
+
         @media (min-width: 768px) {
             .navbar {
                 height: 100%;
@@ -49,23 +55,32 @@
                 width: 80%;
                 margin-left: 10%;
             }
+
+            .navbar{
+                height: 50%;
+                width: 100%;
+            }
+
+            .restoran-image {
+                width: 70%;
+            }
         }
     </style>
 
     <div class="container-fluid">
         <div class="row">
             <!-- navbar - meni -->
-            <div class="col-sm-3 col-lg-2">
+            <div class="col-sm-3 col-lg-2" id="meni">
                 <nav class="navbar navbar-default navbar-fixed-side">
 
                     <!-- normal collapsible navbar markup -->
 
                     {% block navigation_list %}
                         <ul>
-                            <a href="/"><h2>ОнЛајн <br> Храна</h2></a>
+                            <a href="/"><h2>BIDISIT</h2></a>
 
                             <!--moe meni-->
-                            <li><a href="index.php">Почетна</a></li>
+                            <li><a href={% url 'home' %}>Почетна</a></li>
                             <li class="showFirst">Ресторанти<span
                                     class="sb-caret"></span></a>
                                 <ul>
@@ -97,6 +112,42 @@
                                         <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
                                     {% endfor %}
                                 </ul>
+                            </li>
+                            <li class="showFirst">Рибарници<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_ribarnici %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="showFirst">Домашни кујни<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_domasni_kujni %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="showFirst">Слаткарници<span
+                                    class="sb-caret"></span>
+                                <ul>
+                                    {% for rest in lista_slatkarnici %}
+                                        <li><a href="{% url 'restoran2' pk=rest.id %}">{{ rest.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{% url 'my_orders' %}">Мои нарачки</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'pick_city' %}">Избери град</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'login' %}">Најава</a>
+                            </li>
+                            <li>
+                                <a href={% url 'logout' %}>Одјава</a>
                             </li>
                         </ul>
                     {% endblock %}
@@ -147,7 +198,7 @@
                         <div class="row">
                             <div class="container-fluid">
 
-                                <center><h1>ОнЛајн Храна во {{ city }} {{ user }}</h1></center>
+                                <center><h1>bidisit.mk</h1></center>
                                 <img src="{% static 'img/slider1.jpg' %}" class="img-responsive main-image"
                                      height="100">
 
@@ -202,7 +253,7 @@
                                                                             {{ restoran.name }}
                                                                         </p>
                                                                     </a>
-                                                                    <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
+                                                                    <button class='btn' onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
                                                                         коментари
                                                                     </button>
                                                                 </div>
@@ -278,7 +329,7 @@
                                                                                 {{ restoran.name }}
                                                                             </p>
                                                                         </a>
-                                                                        <button onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
+                                                                        <button class='btn' onclick="showCommentsForRestoran('<div><h3>{{ restoran.name }}</h3>Коментари:<br><hr>{% for comment in restoran.comments.all %}<div><strong>{{ comment.user.username }}:</strong>{{ comment.text }}<hr></div>{% endfor %}</div>')">
                                                                             коментари
                                                                         </button>
                                                                     </div>
@@ -304,12 +355,12 @@
                     <style>
                         #comments {
                             position: fixed;
-                            width: 40%;
+                            width: 60%;
                             height: 60%;
                             background: rgba(130, 130, 130, .8);
                             padding: 20px 22px;
                             border: 1px solid;
-                            left: 30%;
+                            left: 20%;
                             top: 20%;
                             overflow-y: auto;
                         }

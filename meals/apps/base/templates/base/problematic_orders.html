@@ -10,7 +10,8 @@
 
 <body>
 {% for item in items %}
-    from: <a href="https://facebook.com/{{ item.0.buyer_uid }}" target="_blank">{{ item.0.buyer }}</a><br>
+    <strong>Ресторан: {{ item.0.restoran.name }} - {{ item.0.restoran.city }}</strong><br>
+    Од: <a href="https://facebook.com/{{ item.0.buyer_uid }}" target="_blank">{{ item.0.buyer }}</a><br>
     <div>Адреса: {{ item.0.address }}</div>
     <div>Телефон: {{ item.0.phone }}</div>
     <div>Достава:
@@ -30,9 +31,9 @@
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" value="{{ item.0.id }}" hidden="hidden" name="order_id">
-        <input class="btn btn-success" type="submit" value="Обележи како завршена">
-        <input class="btn btn-primary" type="submit" value="Испечати" name="print_order">
-        <input class="btn btn-danger" type="submit" value="Пријави како проблематична" name="problem">
+        <input class="btn btn-success" type="submit" value="Обележи како завршена" name="finish">
+        <input class="btn btn-default" type="submit" value="Обележи како одобрена" name="approve">
+        <input class="btn btn-danger" type="submit" value="Одбиј нарачка" name="delete">
     </form>
     <hr>
 {% endfor %}

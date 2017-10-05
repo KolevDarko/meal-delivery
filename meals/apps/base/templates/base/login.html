@@ -7,6 +7,7 @@
             <p class="text-warning">Your username and password didn't match. Please try again.</p>
 	{% endif %}
 
+    <h2>Најава за сопственици</h2>
 	<form role="form" class="form-horizontal" method="post" action="{% url 'login' %}">
 	    {% csrf_token %}
 	    {{ form.as_p }}
@@ -14,6 +15,7 @@
 	    <input type="hidden" name="next" value="{{ next }}" />
 	</form>
     <br>
+    <h2>Најава за потрошувачи</h2>
     <p><strong>Login with Facebook</strong></p>
     <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
     </body>

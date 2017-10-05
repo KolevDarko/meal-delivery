@@ -28,10 +28,14 @@ urlpatterns = [
     url(r'^restoran/(?P<pk>\d+)/orders$', orders_for_restoran, name='orders_for_restoran'),
     url(r'^restoran/(?P<pk>\d+)/approved_orders$', approved_orders_for_restoran, name='approved_orders_for_restoran'),
     url(r'^order/(?P<pk>\d+)', order_details, name='order_details'),
+    url(r'^problems', problematic_orders, name='problems'),
+    url(r'^all_finished_orders', finished_orders, name='finished_orders'),
 
     url(r'^signup/$', signup, name='signup'),
     url(r'^login/$', login, {'template_name': 'base/login.html'}, name='login'),
     url(r'^logout/$', logout, {'next_page': 'home'}, name='logout'),
 
     url(r'^oauth/', include('social_django.urls', namespace='social')),
+
+    url(r'^contact', contact, name='contact'),
 ]

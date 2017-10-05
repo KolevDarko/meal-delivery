@@ -11,6 +11,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .helper_objects import Cart
 
+
 def home(request):
     user = request.user
 
@@ -26,6 +27,9 @@ def home(request):
             picerii = restorans_all.filter(type='picerija')
             burekcilnici = restorans_all.filter(type='burekcilnica')
             sendvicari = restorans_all.filter(type='sendvicara')
+            ribarnici = restorans_all.filter(type='ribarnica')
+            slatkarnici = restorans_all.filter(type='slatkarnica')
+            kujni = restorans_all.filter(type='domasna kujna')
             recomended = restorans_all.filter(recomended=True)
 
             return render(request, 'base/home.html',
@@ -36,21 +40,26 @@ def home(request):
                               'lista_picerii': picerii,
                               'lista_burekcilnici': burekcilnici,
                               'lista_sendvicari': sendvicari,
+                              'lista_ribarnici': ribarnici,
+                              'lista_slatkarnici': slatkarnici,
+                              'lista_domasni_kujni': kujni,
                               'city': city,
                           })
         else:
             return redirect('pick_city')
 
+
 def pick_city(request):
-        if request.method == 'POST':
-            form = PickCityForm(data=request.POST)
-            if form.is_valid():
-                data = form.cleaned_data
-                request.session['city'] = data['city']
-                return redirect('home')
-        else:
-            form = PickCityForm()
-            return render(request, 'base/pick_city.html', {'form': form})
+    if request.method == 'POST':
+        form = PickCityForm(data=request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            request.session['city'] = data['city']
+            return redirect('home')
+    else:
+        form = PickCityForm()
+        return render(request, 'base/pick_city.html', {'form': form})
+
 
 def restoran(request):
     if 'city' in request.session:
@@ -64,13 +73,13 @@ def restoran(request):
     burekcilnici = restorans_all.filter(type='burekcilnica')
     sendvicari = restorans_all.filter(type='sendvicara')
 
-
     return render(request, 'base/restoran.html', {
         'lista_restorani': restorani,
         'lista_picerii': picerii,
         'lista_burekcilnici': burekcilnici,
         'lista_sendvicari': sendvicari,
     })
+
 
 def new_restoran(request):
     if request.user.is_superuser:
@@ -88,6 +97,7 @@ def new_restoran(request):
     else:
         return redirect('home')
 
+
 def new_meal(request):
     if not request.user.is_anonymous:
         if request.method == 'POST':
@@ -95,7 +105,8 @@ def new_meal(request):
             form.fields["menu"].queryset = Menu.objects.all().filter(restoran=Restoran.objects.get(owner=request.user))
             if form.is_valid():
                 data = form.cleaned_data
-                meal = Meal(name=data['name'], description=data['description'], price=data['price'], menu=data['menu'], image=data['image'])
+                meal = Meal(name=data['name'], description=data['description'], price_small=int(data['price_small']),
+                            price_large=int(data['price_large']), menu=data['menu'], image=data['image'])
                 meal.save()
                 return redirect('restoran2', pk=meal.menu.restoran.pk)
         else:
@@ -104,6 +115,7 @@ def new_meal(request):
         return render(request, 'base/add_meal.html', {'type': 'Meal', 'form': form})
     else:
         return redirect('home')
+
 
 def new_menu(request):
     if not request.user.is_anonymous:
@@ -119,6 +131,7 @@ def new_menu(request):
         return render(request, 'base/add_item.html', {'type': 'Menu', 'form': form})
     else:
         return redirect('home')
+
 
 def edit_restoran(request, pk):
     restoran_instance = get_object_or_404(Restoran, pk=pk)
@@ -146,9 +159,11 @@ def edit_restoran(request, pk):
     else:
         return redirect('home')
 
+
 def tester(request):
     cart = request.session.get('cart', Cart)
     return render(request, 'base/tester.html', {'items': cart})
+
 
 def restoran2(request, pk):
     r = get_object_or_404(Restoran, pk=pk)
@@ -158,20 +173,20 @@ def restoran2(request, pk):
             request.session['cart'] = []
             request.session['cart_restoran_name'] = r.name
     if request.method == 'POST':
-        #remove item from cart
+        # remove item from cart
         if 'cart_loop_counter' in request.POST:
             cart_index = int(request.POST['cart_loop_counter']) - 1
             cart = request.session['cart']
             cart.pop(cart_index)
             request.session['cart'] = cart
 
-        #new comment
+        # new comment
         elif 'comment_text' in request.POST:
             if len(request.POST['comment_text']):
                 comment = RestoranComment(text=request.POST['comment_text'], restoran=r, user=request.user)
                 comment.save()
 
-        #if restoran is rated
+        # if restoran is rated
         elif 'star' in request.POST:
             rating = int(request.POST['star'])
             if RestoranRating.objects.filter(user=request.user, restoran=r).count():
@@ -236,6 +251,9 @@ def restoran2(request, pk):
     picerii = restorans_all.filter(type='picerija')
     burekcilnici = restorans_all.filter(type='burekcilnica')
     sendvicari = restorans_all.filter(type='sendvicara')
+    ribarnici = restorans_all.filter(type='ribarnica')
+    slatkarnici = restorans_all.filter(type='slatkarnica')
+    kujni = restorans_all.filter(type='domasna kujna')
     current_rating = 0
 
     if not request.user.is_anonymous and RestoranRating.objects.filter(user=request.user, restoran=r).count():
@@ -264,11 +282,13 @@ def restoran2(request, pk):
             'lista_picerii': picerii,
             'lista_burekcilnici': burekcilnici,
             'lista_sendvicari': sendvicari,
+            'lista_ribarnici': ribarnici,
+            'lista_slatkarnici': slatkarnici,
+            'lista_domasni_kujni': kujni,
             'current_rating': current_rating,
             'comments': comments,
             'sum': 0,
         });
-
 
     meals = []
     sum = 0
@@ -277,7 +297,6 @@ def restoran2(request, pk):
         meals.append((meal, cart_item['quantity'], cart_item['price']))
         sum += int(cart_item['quantity']) * cart_item['price']
 
-
     return render(request, 'base/restoran_2.html', context={
         'r': r,
         'lista_restorani': restorani,
@@ -285,26 +304,33 @@ def restoran2(request, pk):
         'lista_burekcilnici': burekcilnici,
         'lista_sendvicari': sendvicari,
         'current_rating': current_rating,
+        'lista_ribarnici': ribarnici,
+        'lista_slatkarnici': slatkarnici,
+        'lista_domasni_kujni': kujni,
         'meals': meals,
         'sum': sum,
         'cart_restoran_name': cart_restoran_name,
         'comments': comments,
-        })
+    })
+
 
 class Delete_restoran(DeleteView):
     model = Restoran
     success_url = reverse_lazy('tester')
     template_name = 'base/delete_restoran.html'
 
+
 class Delete_meal(DeleteView):
     model = Meal
     success_url = reverse_lazy('home')
     template_name = 'base/delete_restoran.html'
 
+
 class Delete_menu(DeleteView):
     model = Menu
     success_url = reverse_lazy('home')
     template_name = 'base/delete_restoran.html'
+
 
 def edit_meal(request, pk):
     meal_instance = get_object_or_404(Meal, pk=pk)
@@ -317,6 +343,7 @@ def edit_meal(request, pk):
         form = EditMealForm(instance=meal_instance)
     return render(request, 'base/edit_meal.html', {'r': meal_instance, 'form': form})
 
+
 def edit_menu(request, pk):
     menu_instance = get_object_or_404(Menu, pk=pk)
     if request.method == 'POST':
@@ -327,6 +354,7 @@ def edit_menu(request, pk):
     else:
         form = EditMenuForm(instance=menu_instance)
     return render(request, 'base/edit_menu.html', {'r': menu_instance, 'form': form})
+
 
 def signup(request):
     if request.method == 'POST':
@@ -341,6 +369,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'base/signup.html', {'form': form})
+
 
 def show_cart(request):
     if 'cart_restoran_name' in request.session and 'cart' in request.session:
@@ -377,6 +406,7 @@ def show_cart(request):
         'restoran_name': restoran_name,
     })
 
+
 def make_order(request):
     user = request.user
 
@@ -386,9 +416,15 @@ def make_order(request):
     if user.groups.filter(name='owners').exists():
         return redirect('home')
 
+    if not 'cart' in request.session or not 'cart_restoran_name' in request.session:
+        return redirect('home')
+
     else:
         restoran_name = request.session['cart_restoran_name']
         cart = request.session['cart'];
+
+        if len(cart) > 1:
+            return redirect('home')
 
         if request.method == 'POST':
             form = OrderForm(data=request.POST)
@@ -401,7 +437,8 @@ def make_order(request):
                               phone=data['phone'], delivery=data['delivery'], special_request=data['special_request'])
                 order.save()
                 for cart_item in cart:
-                    pair = My_key_val(container=order, key=cart_item['meal_id'], value=cart_item['quantity'], price=cart_item['price'])
+                    pair = My_key_val(container=order, key=cart_item['meal_id'], value=cart_item['quantity'],
+                                      price=cart_item['price'])
                     pair.save()
                 request.session['cart'] = []
                 return redirect('my_orders')
@@ -409,7 +446,12 @@ def make_order(request):
             form = OrderForm()
         return render(request, 'base/make_order.html', {'form': form})
 
+
 def orders_for_restoran(request, pk):
+    restoran = get_object_or_404(Restoran, pk=pk)
+    if not request.user.is_superuser and not restoran.owner == request.user:
+        return redirect('home')
+
     if request.method == 'POST':
         order_id = request.POST['order_id']
         order = Order.objects.get(pk=order_id);
@@ -419,7 +461,6 @@ def orders_for_restoran(request, pk):
             order.status = 'unapproved'
         order.save()
 
-    restoran = get_object_or_404(Restoran, pk=pk)
     orders = Order.objects.filter(restoran=restoran, status='unassigned')
 
     items = []
@@ -434,18 +475,27 @@ def orders_for_restoran(request, pk):
             meals_in_order.append((meal_name, key_val.value))
         items.append((order, meals_in_order, total_price))
 
-
     return render(request, 'base/orders_for_restoran.html', {'items': items})
 
+
 def approved_orders_for_restoran(request, pk):
+    restoran = get_object_or_404(Restoran, pk=pk)
+    if not request.user.is_superuser and not restoran.owner == request.user:
+        return redirect('home')
+
     if request.method == 'POST':
         order_id = request.POST['order_id']
         order = Order.objects.get(pk=order_id);
-        order.status = 'finished'
-        order.save()
+        if 'print_order' in request.POST:
+            return redirect('order_details', pk=order_id)
+        else:
+            if 'problem' in request.POST:
+                order.status = 'problematic'
+            else:
+                order.status = 'finished'
 
+            order.save()
 
-    restoran = get_object_or_404(Restoran, pk=pk)
     orders = Order.objects.filter(restoran=restoran, status='approved')
 
     items = []
@@ -462,7 +512,11 @@ def approved_orders_for_restoran(request, pk):
 
     return render(request, 'base/approved_orders_for_restoran.html', {'items': items})
 
+
 def orders_for_user(request):
+    if request.user.is_anonymous or request.user.groups.filter(name='owners').exists():
+        return redirect('home')
+
     comments_display = 'none'
     comments = ''
     comment_meal_id = ''
@@ -488,7 +542,6 @@ def orders_for_user(request):
             comments_display = 'block'
             comments = MealComment.objects.all().filter(meal=meal)
 
-
     orders = Order.objects.filter(buyer=request.user)
     items = []
     for order in orders:
@@ -504,13 +557,127 @@ def orders_for_user(request):
 
     items = list(reversed(items))
 
+    # menu items
+    if 'city' in request.session:
+        """ Default view for the root """
+        city = request.session["city"]
+        restorans_all = Restoran.objects.filter(city=city)
+    else:
+        restorans_all = Restoran.objects.all()
+
+    restorani = restorans_all.filter(type='restoran')
+    picerii = restorans_all.filter(type='picerija')
+    burekcilnici = restorans_all.filter(type='burekcilnica')
+    sendvicari = restorans_all.filter(type='sendvicara')
+    ribarnici = restorans_all.filter(type='ribarnica')
+    slatkarnici = restorans_all.filter(type='slatkarnica')
+    kujni = restorans_all.filter(type='domasna kujna')
+    recomended = restorans_all.filter(recomended=True)
+
     return render(request, 'base/orders_for_user.html', {
         'items': items,
         'comments_display': comments_display,
         'comments': comments,
         'comment_meal_id': comment_meal_id,
+
+        'restorans_all': restorans_all,
+        'recomended': recomended,
+        'lista_restorani': restorani,
+        'lista_picerii': picerii,
+        'lista_burekcilnici': burekcilnici,
+        'lista_sendvicari': sendvicari,
+        'lista_ribarnici': ribarnici,
+        'lista_slatkarnici': slatkarnici,
+        'lista_domasni_kujni': kujni,
+        'city': city,
     })
 
-def order_details(request, pk):
-    return 0
 
+def order_details(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    key_vals = My_key_val.objects.filter(container=order)
+    meals_in_order = []
+    total_price = 0
+    for key_val in key_vals:
+        meal = Meal.objects.get(id=key_val.key)
+        meal_name = meal.name
+        total_price += int(key_val.price) * int(key_val.value)
+        meals_in_order.append((meal_name, key_val.value))
+    item = (order, meals_in_order, total_price)
+
+    return render(request, 'base/print_order_details.html', {'item': item})
+
+
+def contact(request):
+    return render(request, 'base/kontakt.html')
+
+
+def problematic_orders(request):
+    if not request.user.is_superuser:
+        return redirect('home')
+
+    if request.method == 'POST':
+        order_id = request.POST['order_id']
+        order = Order.objects.get(pk=order_id);
+        if 'finish' in request.POST:
+            order.status = 'finished'
+        elif 'approve' in request.POST:
+            order.status = 'approved'
+        else:
+            order.status = 'unapproved'
+
+        order.save()
+
+    orders = Order.objects.filter(status='problematic')
+
+    items = []
+    for order in orders:
+        key_vals = My_key_val.objects.filter(container=order)
+        meals_in_order = []
+        total_price = 0
+        for key_val in key_vals:
+            meal = Meal.objects.get(id=key_val.key)
+            meal_name = meal.name
+            total_price += int(key_val.price) * int(key_val.value)
+            meals_in_order.append((meal_name, key_val.value))
+        items.append((order, meals_in_order, total_price))
+
+    return render(request, 'base/problematic_orders.html', {'items': items})
+
+
+def finished_orders(request):
+    if not request.user.is_superuser:
+        return redirect('home')
+    restorans = Restoran.objects.all()
+
+    if request.method == 'POST':
+        restoran_id = request.POST['restoran_id']
+        month = request.POST['month']
+        year = request.POST['year']
+        restoran = restorans.get(pk=restoran_id)
+
+        orders = Order.objects.filter(restoran=restoran,
+                                      creation_time__month=month,
+                                      creation_time__year=year)
+
+        items = []
+        sum_of_all_orders = 0
+        for order in orders:
+            key_vals = My_key_val.objects.filter(container=order)
+            meals_in_order = []
+            total_price = 0
+            for key_val in key_vals:
+                meal = Meal.objects.get(id=key_val.key)
+                meal_name = meal.name
+                total_price += int(key_val.price) * int(key_val.value)
+                meals_in_order.append((meal_name, key_val.value))
+            sum_of_all_orders += total_price
+            items.append((order, meals_in_order, total_price))
+
+        return render(request, 'base/finished_orders_for_restoran.html',
+                      {'items': items,
+                       'restorans': restorans,
+                       'sum_of_all_orders': sum_of_all_orders,
+                       })
+
+    return render(request, 'base/finished_orders_for_restoran.html', {'restorans': restorans, })

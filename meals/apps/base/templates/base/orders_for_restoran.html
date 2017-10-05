@@ -21,8 +21,9 @@
     </form>
     <hr>
 {% endfor %}
-<button onclick="notifyMe()">notify</button>
-<audio id="beep" src="audio/notification_beep.mp3." preload="auto" type="audio/mpeg"></audio>
+<audio id="beep" src="/media/audio/beep.mp3" preload="auto" type="audio/mpeg"></audio>
+
+<button onclick="playBeep()">BEEP!</button>
 
 <script>
     function playBeep() {
@@ -36,7 +37,6 @@
     });
 
     function notifyMe() {
-        playBeep();
       if (!Notification) {
         alert('Desktop notifications not available in your browser. Try Chromium.');
         return;
@@ -47,7 +47,7 @@
       else {
           var notification = new Notification('Notification title', {
               icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-              body: "Имате нови нарачки",
+              body: "Имате нови нарачки"
           });
 
           notification.onclick = function () {
@@ -59,6 +59,7 @@
     setInterval(function () {
         if( {{ items|length }} > 0)
         {
+            playBeep();
             notifyMe();
         }
 

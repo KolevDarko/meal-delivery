@@ -82,7 +82,8 @@ class Order(models.Model):
         ('unassigned', 'Неопределена'),
         ('unapproved', 'Одбиена'),
         ('approved', 'Одобрена'),
-        ('finished', 'Завршена')
+        ('finished', 'Завршена'),
+        ('problematic', 'Проблем')
     ]);
 
     def __str__(self):

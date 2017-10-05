@@ -77,9 +77,13 @@
             font-style: italic;
         }
 
+        .meal_card {
+                height: 300px;
+            }
+
         @media (min-width: 768px) {
             .meal_card {
-                height: 250px;
+                height: 300px;
             }
         }
 
@@ -87,6 +91,10 @@
             .meal_card {
                 width: 80%;
                 margin-left: 10%;
+            }
+
+            .meal-image {
+                width: 70%;
             }
         }
     </style>
@@ -139,7 +147,7 @@
 {#                    </center>#}
 {#                    <center>#}
                     </center><br>
-                    <input type="button" value="Прикажи коментари" onclick="showComments()">
+                    <input class='btn' type="button" value="Прикажи коментари" onclick="showComments()">
                     <img src="{{ r.image.url }}" class="img-responsive main-image" height="100">
                 </div>
             </div>
@@ -149,10 +157,9 @@
             <div class="container-fluid">
                 <div class="row-sredina">
                     <div class="col-lg-20">
-                        <h2>МЕНИ</h2>
+                        <h2>{{ menu.name }}</h2>
                         <div class="container">
                             <div class="col-md-11">
-                                <p align="left"><strong>{{ menu.name }}</strong></p>
                                 <div class="well-none">
                                     <div id="myCarousel" class="carousel slide">
                                         <!-- Carousel items -->
@@ -174,8 +181,8 @@
                                                                 <form action="" class="order_form" method="post" enctype="multipart/form-data">
                                                                     {% csrf_token %}
                                                                     <input type="text" value="{{ meal.id }}" hidden="hidden" name="meal_id">
-                                                                    <input type="number" name="quantity" min="1" max="99" value="1">
-                                                                    <input type="submit" value="Додај во кошничка">
+                                                                    <input type="number" name="quantity" min="1" max="99" value="1" class="form-control">
+                                                                    <input type="submit" value="Додај во кошничка" class="btn btn-success">
                                                                     <div {% if meal.price_small <= 0 %} hidden="hidden" {% endif %}>
                                                                         <label for="rSmall">Мала: </label><input id="rSmall" type="radio" name="size" value="small" class="radios">
                                                                         <label for="rLarge">Голема: </label><input id="rLarge" type="radio" name="size" value="large"  checked="checked" class="radios">
@@ -185,18 +192,26 @@
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <img style="float: left; margin: 5px;"  />
                                                             <div style="padding: 0 0 0 0">
-                                                            <span style="float: left; vertical-align: middle; padding: 0 0 0 0" >{{ meal.name }}</span>
-                                                            <div class="star-ratings-sprite"><span style="width:{{ meal.average_rating }}%" class="star-ratings-sprite-rating"></span></div>
-                                                            <span style="float:left;">({{ meal.ratings.all.count }})</span>
+                                                                <div><span
+                                                                        style="float: left; vertical-align: middle; padding: 0 0 0 0">{{ meal.name }}</span><br>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="star-ratings-sprite"><span
+                                                                            style="width:{{ meal.average_rating }}%"
+                                                                            class="star-ratings-sprite-rating"></span>
+                                                                    </div>
+                                                                    <span style="float:left;">({{ meal.ratings.all.count }})</span><br>
+                                                                </div>
                                                             </div>
-                                                            <div style="text-align: left; padding: 0 0 0 10px">{{ meal.description }}</div>
-                                                            <div style="text-align: left; padding: 0 0 0 10px"><strong>Цена:</strong>
+                                                            <br>
+                                                            <div style="text-align: left;">{{ meal.description }}</div>
+                                                            <div style="text-align: left;"><strong>Цена:</strong>
                                                                 {% if meal.price_small > 0 %}
-                                                                    {{ meal.price_small }}
+                                                                    {{ meal.price_small }} /
                                                                 {% endif %}
-                                                                {{ meal.price_large }}МКД</div>
+                                                                {{ meal.price_large }}МКД
+                                                            </div>
                                                         </div>
                                                     </div>
                                                         {% endif %}
@@ -241,12 +256,12 @@
 
     #comments{
         position: fixed;
-        width: 40%;
+        width: 60%;
         height: 60%;
         background: rgba(130,130,130,.8);
         padding: 20px 22px;
         border: 1px solid;
-        left: 30%;
+        left: 20%;
         top: 20%;
         overflow-y: auto;
     }
@@ -257,7 +272,7 @@
             height: 20px;
             width: 40px;
             left: 3%;
-            top: 90%;
+            top: 95%;
         }
 
     @media (max-width: 768px) {
@@ -266,6 +281,10 @@
             height: 60%;
             left: 15%;
             top: 20%;
+        }
+
+        #show_cart{
+            top: 90%;
         }
     }
 </style>
@@ -276,7 +295,7 @@
         <form method="post">
             {% csrf_token %}
             <input type="number"  value="{{ forloop.counter }}" name="cart_loop_counter" hidden="hidden">
-            <input type="submit" value="Отстрани од кошничка">
+            <input type="submit" value="Отстрани од кошничка" class="btn btn-danger">
         </form>
         <br>
     {% endfor %}
@@ -288,7 +307,12 @@
     {#        {% csrf_token %}#}
     {#        <input type="submit" value="Направи нарачка">#}
     {#</form>#}
-    <a href="{% url 'make_order' %}">Направи нарачка</a>
+
+    <p>
+        Доколку имате специјално барање за вашата храна(пр. без мајонез, без салати и слично) можете да го напишете во наредниот чекор пред да ја извршите нарачката
+    </p>
+    <hr>
+    <a href="{% url 'make_order' %}" class="btn btn-success">Направи нарачка</a>
 </div>
 
 <div id="comments">
@@ -334,10 +358,7 @@
     setPictureHeight();
 
     $("#comments").hide();
-
-    if(window.width > 768) {
-            $("#cart").hide();
-    }
+    $("#cart").hide();
 
     $(document).mouseup(function(e) {
         var container = $("#comments");
